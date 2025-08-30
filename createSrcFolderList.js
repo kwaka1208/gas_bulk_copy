@@ -24,7 +24,7 @@ function createSrcFolderList(_targetSheet, _startRow) {
       console.log("LAST ROW: " + lastRow)
       console.log("LENGTH: "   + folderList.length)
       console.log(folderList)
-      _targetSheet.getRange(lastRow, COL.NAME, folderList.length, 2).setValues(folderList)
+      _targetSheet.getRange(lastRow, COL.NAME, folderList.length, 3).setValues(folderList)
       // _targetSheet.getRange(lastRow + folderList.length, COL.NAME).setValue(FOLDER_DELIMITER)
     }
     _targetSheet.getRange(sheetRow, COL.SCANNED).setValue(MARK_COMPLETE)

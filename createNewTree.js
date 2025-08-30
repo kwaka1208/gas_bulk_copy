@@ -10,7 +10,7 @@ function createNewTree(sheetRow_) {
       list = workSheet.getRange(sheetRow_, COL.NAME).getValue()
       target = createTree(dstFolderId, list.toString().split(PATH_DELIMITER))
       workSheet.getRange(sheetRow_, COL.DST_FOLDER_URL).setValue(target.getUrl())
-      workSheet.getRange(sheetRow_, COL.FOLDER_COPIED).setValue(MARK_COMPLETE)
+      // workSheet.getRange(sheetRow_, COL.FOLDER_COPIED).setValue(MARK_COMPLETE)
       sheetRow_++
     }
   }

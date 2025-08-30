@@ -12,7 +12,11 @@ function getFolderList(parentFolderName, srcFolder){
       nextSrcFolder = srcFolders.next()
       folderInfo[0] = parentFolderName + PATH_DELIMITER + nextSrcFolder.getName()
       folderInfo[1] = nextSrcFolder.getUrl()
+      folderInfo[2] = getFileCount(nextSrcFolder)
+      console.log("File Count: " + folderInfo[2])
       folderList.push(folderInfo)
+      console.log(folderInfo)
     }
     return folderList
   }
+

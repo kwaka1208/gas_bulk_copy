@@ -8,26 +8,6 @@ let dstFolderUrl // コピー先フォルダ
 let startRow
 let unitRow
 
-const PATH_DELIMITER = "/_/_/"
-const FOLDER_DELIMITER = "----------"
-const MARK_COMPLETE = "済"
-
-const COL = {
-  SCANNED: 1,
-  FOLDER_COPIED: 2,
-  FILES_COPIED: 3,
-  NAME : 4,   // フォルダ名
-  URL : 5,     // フォルダID
-  FILE_COUNT : 6,
-  DST_FOLDER_URL : 7,
-}
-
-const PANEL = {
-  SRC_FOLDER: "B1",
-  DST_FOLDER: "B2",
-  TARGET: "B3",
-}
-
 /**
  * フォルダリストを作成
  * @module NewCreateFolderList
@@ -45,19 +25,24 @@ function NewCreateFolderList() {
   var index =  [
     "コピー元スキャン",
     "コピー先フォルダ作成",
-    "ファイルコピー",
     "コピー元フォルダ名",
     "コピー元フォルダURL",
     "ファイル数",
-    "コピー先フォルダURL",
+    "コピー済みファイル数",
+    "コピー先フォルダURL"
   ]
+  // 見出しをセット
   workSheet.getRange(1, 1, 1, index.length).setValues([index])
-  workSheet.getRange(2, COL.URL).setValue(panelSheet.getRange(PANEL.SRC_FOLDER).getValue())
-  srcFolder = DriveApp.getFolderById(getFolderIdByURL(panelSheet.getRange(PANEL.SRC_FOLDER).getValue()))
-  workSheet.getRange(2, COL.NAME).setValue(srcFolder.getName())
-  // workSheet.getRange(2, COL.NAME).setValue(FOLDER_DELIMITER)
 
-  // コピー元フォルダのフォルダリストを作成
+  // ルートフォルダの情報をセット
+  rootFolder = DriveApp.getFolderById(srcFolderId);
+  folderList = folderInfo = []
+  folderInfo[0] = rootFolder.getName()
+  folderInfo[1] = srcFolderUrl
+  folderInfo[2] = getFileCount(rootFolder)
+  folderList.push(folderInfo)
+  workSheet.getRange(2, COL.NAME, 1, 3).setValues(folderInfo)
+  // コピー元フォルダの中のフォルダリストを作成
   ContinueCreateFolderList()
 }
 
@@ -88,10 +73,8 @@ function CopyAllFiles() {
   // フォルダリストを元に各フォルダ間でファイルのみコピーする
   sheetRow = getLastRowInCol(workSheet, COL.FILES_COPIED) + 1
   while(workSheet.getRange(sheetRow, COL.URL).getValue() != "") {
-    var count  = copyFiles(getFolderIdByURL(workSheet.getRange(sheetRow, COL.URL).getValue()),
-              getFolderIdByURL(workSheet.getRange(sheetRow, COL.DST_FOLDER_URL).getValue()))
-    workSheet.getRange(sheetRow, COL.FILE_COUNT).setValue(count)
-    workSheet.getRange(sheetRow, COL.FILES_COPIED).setValue(MARK_COMPLETE)
+    copyFiles(workSheet, sheetRow)
+    // workSheet.getRange(sheetRow, COL.FILES_COPIED).setValue(MARK_COMPLETE)
     sheetRow++
   }
   SpreadsheetApp.getUi().alert('ファイルのコピーを完了しました')
