@@ -41,14 +41,18 @@ function copyFiles(ws_, sheetRow_){
   if (startNumber === "" || isNaN(startNumber)) {
     startNumber = 0; // デフォルトで0から開始
   } else {
-    startNumber = parseInt(startNumber, 10) + 1;
+    startNumber = Number(startNumber);
   }
+
+  // const endValue = startNumber + 5
+  const endValue = filesArray.length
   // 指定した番号から順にファイルのコピーを実行
-  for (var i = startNumber; i < 11; i++) {
+  console.log(`To: $(endValue)`)
+  for (var i = startNumber; i < endValue; i++) {
     var srcFile = filesArray[i];
     try {
       srcFile.makeCopy(srcFile.getName(), dstFolder);
-      ws_.getRange(sheetRow_, COL.FILES_COPIED).setValue(i)
+      ws_.getRange(sheetRow_, COL.FILES_COPIED).setValue(i+1)
       // ログにコピー完了したファイルの番号とファイル名を出力
       console.log("コピー完了: " + (i + 1) + "件目 (" + (i + 1) + "/" + filesArray.length + ") - " + srcFile.getName());
     } catch (e) {

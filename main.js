@@ -36,12 +36,12 @@ function NewCreateFolderList() {
 
   // ルートフォルダの情報をセット
   rootFolder = DriveApp.getFolderById(srcFolderId);
-  folderList = folderInfo = []
-  folderInfo[0] = rootFolder.getName()
-  folderInfo[1] = srcFolderUrl
-  folderInfo[2] = getFileCount(rootFolder)
+  folderList = []
+  folderInfo = [ rootFolder.getName(),
+                 srcFolderUrl,
+                 getFileCount(rootFolder)]
   folderList.push(folderInfo)
-  workSheet.getRange(2, COL.NAME, 1, 3).setValues(folderInfo)
+  workSheet.getRange(2, COL.NAME, 1, 3).setValues(folderList)
   // コピー元フォルダの中のフォルダリストを作成
   ContinueCreateFolderList()
 }
@@ -64,17 +64,26 @@ function ContinueCreateFolderList() {
 function DuplicateFolders() {
   setup()
   // フォルダリストを元にコピー先のフォルダ構造を作成する。
-  createNewTree(getLastRowInCol(workSheet, COL.FOLDER_COPIED) + 1)
+  createNewTree(getLastRowInCol(workSheet, COL.DST_FOLDER_URL) + 1)
   SpreadsheetApp.getUi().alert('コピー先フォルダの作成を完了しました')
 }
 
 function CopyAllFiles() {
   setup()
   // フォルダリストを元に各フォルダ間でファイルのみコピーする
-  sheetRow = getLastRowInCol(workSheet, COL.FILES_COPIED) + 1
+  sheetRow = getLastRowInCol(workSheet, COL.FILES_COPIED)
+  if (sheetRow == 1) sheetRow++ // ヘッダー行はスキップ
+  totalFileCount = Number(workSheet.getRange(sheetRow, COL.FILE_COUNT).getValue())
+  copiedFileCount = Number(workSheet.getRange(sheetRow, COL.FILES_COPIED).getValue())
+  console.log(`最大数： ${totalFileCount} コピー済み数：${copiedFileCount}`)
+
+  if (totalFileCount == copiedFileCount)
+  {
+    sheetRow++ // 最後の行がすべてコピーされていたら次の行へ
+  }
+  // copyFiles(workSheet, sheetRow)
   while(workSheet.getRange(sheetRow, COL.URL).getValue() != "") {
     copyFiles(workSheet, sheetRow)
-    // workSheet.getRange(sheetRow, COL.FILES_COPIED).setValue(MARK_COMPLETE)
     sheetRow++
   }
   SpreadsheetApp.getUi().alert('ファイルのコピーを完了しました')

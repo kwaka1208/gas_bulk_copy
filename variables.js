@@ -4,12 +4,11 @@ const MARK_COMPLETE = "済"
 
 const COL = {
   SCANNED: 1,
-  FILES_COPIED: 2,
-  NAME : 3,   // フォルダ名
-  URL : 4,     // フォルダID
-  FILE_COUNT : 5,
-  FOLDER_COPIED: 6,
-  DST_FOLDER_URL : 7
+  NAME : 2,   // フォルダ名
+  URL : 3,     // フォルダURL
+  FILE_COUNT : 4,
+  FILES_COPIED: 5,
+  DST_FOLDER_URL : 6
 }
 
 const PANEL = {
