@@ -1,22 +1,22 @@
 /**
- * 指定フォルダの中にあるフォルダのIDのリストを作成する
- * @module getFolderList
- * @param {sting} parentFolderName - GoogleフォルダのURL
- * @param {sting} srcFolder - GoogleフォルダのURL
+ * 指定フォルダの直下にあるサブフォルダのリストを作成する
+ * @param {Folder} srcFolder - Googleドライブのフォルダオブジェクト
+ * @param {number} parentRow - 親フォルダのシート行番号
+ * @returns {Array} [フォルダ名, URL, ファイル数, '', '', 親行番号] の配列
  */
-function getFolderList(parentFolderName, srcFolder){
-    var srcFolders = srcFolder.getFolders()//フォルダ内フォルダをゲット
-    var folderList = []
-    while(srcFolders.hasNext()) {
-      folderInfo = []
-      nextSrcFolder = srcFolders.next()
-      folderInfo[0] = parentFolderName + PATH_DELIMITER + nextSrcFolder.getName()
-      folderInfo[1] = nextSrcFolder.getUrl()
-      folderInfo[2] = getFileCount(nextSrcFolder)
-      console.log("File Count: " + folderInfo[2])
-      folderList.push(folderInfo)
-      console.log(folderInfo)
-    }
-    return folderList
+function getFolderList(srcFolder, parentRow) {
+  const srcFolders = srcFolder.getFolders()
+  const folderList = []
+  while (srcFolders.hasNext()) {
+    const nextSrcFolder = srcFolders.next()
+    folderList.push([
+      nextSrcFolder.getName(),
+      nextSrcFolder.getUrl(),
+      getFileCount(nextSrcFolder),
+      '',        // FILES_COPIED（空）
+      '',        // DST_FOLDER_URL（空）
+      parentRow  // PARENT_ROW
+    ])
   }
-
+  return folderList
+}

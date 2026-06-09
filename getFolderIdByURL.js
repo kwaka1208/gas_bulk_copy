@@ -1,8 +1,10 @@
 /**
- * Google DriveのフォルダのURLからフォルダIDを取得する
- * @module getFolderIdByURL
- * @param {string} - _url GoogleフォルダのURL
+ * Google DriveのフォルダURLからフォルダIDを取得する
+ * @param {string} _url - GoogleフォルダのURL
+ * @returns {string} フォルダID
  */
 function getFolderIdByURL(_url) {
-    return _url.split('/folders/')[1]
-  }
+  const parts = _url.split('/folders/')
+  if (parts.length < 2) return _url
+  return parts[1].split('?')[0].split('/')[0]
+}

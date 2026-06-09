@@ -1,12 +1,19 @@
-run:
-	docker-compose up -d
-build:
-	docker-compose build
-clean-build:
-	docker-compose build --no-cache
-stop:
-	docker-compose down
-enter:
-	docker-compose exec clasp /bin/bash
-log:
-	docker-compose logs -f clasp
+# 変数の定義を読み込み
+COMMAND=clasp
+
+# 認証
+login:
+	$(COMMAND) login
+
+# スクリプトをクラウドに反映
+push:
+	$(COMMAND) push
+
+# クラウドのスクリプトをローカルに取り込み
+pull:
+	$(COMMAND) pull
+
+# スクリプトを開く
+open:
+	$(COMMAND) open-script
+
